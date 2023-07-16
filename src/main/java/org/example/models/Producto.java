@@ -2,47 +2,36 @@ package org.example.models;
 
 public abstract class Producto {
     private String id;
-    private String nombre;
+    private String marca;
     private String modelo;
-    private int stock;
 
-    public Producto(String id, String nombre, String modelo) {
+    public Producto(String id, String marca, String modelo) {
         this.id = id;
-        this.nombre = nombre;
+        this.marca = marca;
         this.modelo = modelo;
-        this.stock = 0;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
-    }
-
-    public int getStock() {
-        return stock;
-    }
-
-    public void setStock(int stock) {
-        this.stock = stock;
     }
 
     public String getId() {
         return id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getMarca() {
+        return marca;
     }
 
     public String getModelo() {
         return modelo;
     }
-}
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
+    }
+}

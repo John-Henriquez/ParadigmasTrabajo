@@ -68,6 +68,7 @@ public class Usuario {
     public void setApellidoMaterno(String apellidoMaterno) {
         this.apellidoMaterno = apellidoMaterno;
     }
+
     public String getNombreCompleto() {
         return nombres + " " + apellidoPaterno + " " + apellidoMaterno;
     }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataLoader {
+    private static List<Usuario> listaUsuarios = new ArrayList<>();
     private static List<Teclado> listaTeclados = new ArrayList<>();
     private static List<Mouse> listaMouses = new ArrayList<>();
     private static List<Monitor> listaMonitores = new ArrayList<>();
@@ -55,6 +56,7 @@ public class DataLoader {
 
         // Precarga de datos de Usuarios
         Usuario usuario = new Usuario("1", "admin", "admin123", "John", "Doe", "Smith");
+        listaUsuarios.add(usuario);
     }
 
     public static List<Teclado> getListaTeclados() {
@@ -75,5 +77,8 @@ public class DataLoader {
 
     public static List<PCDeEscritorio> getListaPCs() {
         return listaPCs;
+    }
+    public static List<Usuario> getListaUsuarios() {
+        return listaUsuarios;
     }
 }

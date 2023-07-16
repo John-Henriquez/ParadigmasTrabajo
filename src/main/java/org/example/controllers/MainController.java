@@ -25,6 +25,25 @@ public class MainController {
         productos.remove(producto);
         actualizarStock(producto.getModelo(), -1);
     }
+    public void actualizarProducto(Producto producto) {
+        // Busca el producto en la lista y actualiza sus datos
+        for (int i = 0; i < productos.size(); i++) {
+            Producto p = productos.get(i);
+            if (p.getId().equals(producto.getId())) {
+                productos.set(i, producto);
+                break;
+            }
+        }
+    }
+    public Producto obtenerProducto(String id) {
+        // Busca el producto en la lista por su identificador único
+        for (Producto producto : productos) {
+            if (producto.getId().equals(id)) {
+                return producto;
+            }
+        }
+        return null;
+    }
 
     public int getCantidadExistente(String modelo) {
         return stock.getOrDefault(modelo, 0);
@@ -37,6 +56,4 @@ public class MainController {
     public List<Producto> getProductos() {
         return productos;
     }
-
-    // Aquí puedes agregar más métodos y funcionalidades necesarios para el controlador
 }
