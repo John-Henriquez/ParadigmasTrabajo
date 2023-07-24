@@ -55,4 +55,16 @@ public class PCDeEscritorio extends Producto {
     public void setMonitor(Monitor monitor) {
         this.monitor = monitor;
     }
+    public String toString() {
+        return "PC de escritorio = (" + "\n" +
+                "id: " + getId() +
+                "/ marca: " + getMarca() +
+                "/ modelo: " + getModelo() +
+                "/ memoria ram: " + getCantidadRAM() +
+                "/ procesador: " + getProcesador() + "\n" +
+                " teclado: " + getTeclado() + "\n" +
+                " mouse: " + getMouse() + "\n" +
+                " monitor: " + getMonitor()
+                + ")";
+    }
 }

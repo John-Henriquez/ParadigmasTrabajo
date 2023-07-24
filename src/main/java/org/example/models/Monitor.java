@@ -15,4 +15,11 @@ public class Monitor extends Producto {
     public void setTamaño(int tamaño) {
         this.tamaño = tamaño;
     }
+    public String toString() {
+        return "Monitor = " +
+                "id: " + getId()  +
+                "/ marca: " + getMarca() +
+                "/ modelo: " + getModelo() +
+                "/ tamaño: " + getTamaño();
+    }
 }

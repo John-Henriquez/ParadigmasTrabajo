@@ -35,4 +35,13 @@ public class Notebook extends Producto {
     public void setTamañoPantalla(int tamañoPantalla) {
         this.tamañoPantalla = tamañoPantalla;
     }
+    public String toString() {
+        return "Notebook = " +
+                "id: " + getId() +
+                "/ marca: " + getMarca() +
+                "/ modelo: " + getModelo() +
+                "/ memoriaRam: " + getCantidadRAM() +
+                "/ procesador: " + getProcesador() +
+                "/ tamañoPantalla: " + getTamañoPantalla();
+    }
 }

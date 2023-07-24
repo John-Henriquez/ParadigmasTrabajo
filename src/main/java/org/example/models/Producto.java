@@ -4,11 +4,13 @@ public abstract class Producto {
     private String id;
     private String marca;
     private String modelo;
+    private int cantidadExistente;
 
     public Producto(String id, String marca, String modelo) {
         this.id = id;
         this.marca = marca;
         this.modelo = modelo;
+        this.cantidadExistente = 0;
     }
 
     public String getId() {
@@ -23,8 +25,11 @@ public abstract class Producto {
         return modelo;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public int getCantidadExistente() {
+        return cantidadExistente;
+    }
+    public void setCantidadExistente(int cantidadExistente) {
+        this.cantidadExistente = cantidadExistente;
     }
 
     public void setMarca(String marca) {

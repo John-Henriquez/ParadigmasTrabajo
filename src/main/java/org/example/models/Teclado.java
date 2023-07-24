@@ -11,8 +11,11 @@ public class Teclado extends Producto {
     public String getIdioma() {
         return idioma;
     }
-
-    public void setIdioma(String idioma) {
-        this.idioma = idioma;
+    public String toString() {
+        return "Teclado = " +
+                "id: " + getId() +
+                "/ marca: " + getMarca() +
+                "/ modelo: " + getModelo() +
+                "/ idioma: '" + getIdioma();
     }
 }
