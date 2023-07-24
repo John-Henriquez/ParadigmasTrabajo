@@ -15,6 +15,15 @@ public class MainController {
         productos = new ArrayList<>();
         stock = new HashMap<>();
     }
+    public List<Producto> buscarProductosPorMarca(String marca) {
+        List<Producto> productosMarca = new ArrayList<>();
+        for (Producto producto : productos) {
+            if (producto.getMarca().equalsIgnoreCase(marca)) {
+                productosMarca.add(producto);
+            }
+        }
+        return productosMarca;
+    }
 
     public void agregarProducto(Producto producto) {
         productos.add(producto);
@@ -36,7 +45,6 @@ public class MainController {
         }
     }
     public Producto obtenerProducto(String id) {
-        // Busca el producto en la lista por su identificador único
         for (Producto producto : productos) {
             if (producto.getId().equals(id)) {
                 return producto;
@@ -44,16 +52,17 @@ public class MainController {
         }
         return null;
     }
+    public List<Producto> obtenerProductos() {
+        return productos;
+    }
 
     public int getCantidadExistente(String modelo) {
         return stock.getOrDefault(modelo, 0);
     }
-
     private void actualizarStock(String modelo, int cantidad) {
-        stock.put(modelo, stock.getOrDefault(modelo, 0) + cantidad);
+        int stockActual = stock.getOrDefault(modelo, 0);
+        int nuevoStock = Math.max(stockActual + cantidad, 0); // Evitar stock negativo
+        stock.put(modelo, nuevoStock);
     }
-
-    public List<Producto> getProductos() {
-        return productos;
-    }
+    
 }

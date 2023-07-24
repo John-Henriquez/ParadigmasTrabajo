@@ -19,7 +19,7 @@ public class MainView extends JFrame {
         this.usuario = usuario;
         this.controller = controller;
         setTitle("Main View");
-        setSize(400, 300);
+        setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -35,19 +35,9 @@ public class MainView extends JFrame {
         JLabel usernameLabel = new JLabel("Usuario: " + usuario.getNombreCompleto());
         panel.add(usernameLabel);
 
-        JLabel stockLabel = new JLabel("              Stock");
-        panel.add(stockLabel);
 
-        stockInfoArea = new JTextArea();
-        stockInfoArea.setEditable(false);
-        stockInfoArea.setMargin(new Insets(10, 10, 10, 10));
-        panel.add(stockInfoArea);
-
-        actualizarStockInfo();
-
-        /*
-             // Botón Agregar
-        JButton agregarButton = new JButton("Agregar");
+        // Botón Agregar Producto
+        JButton agregarButton = new JButton("Agregar Producto");
         agregarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -57,8 +47,8 @@ public class MainView extends JFrame {
         });
         panel.add(agregarButton);
 
-        // Botón Actualizar
-        JButton actualizarButton = new JButton("Actualizar");
+        // Botón Actualizar Producto
+        JButton actualizarButton = new JButton("Actualizar Producto");
         actualizarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -73,10 +63,30 @@ public class MainView extends JFrame {
             }
         });
         panel.add(actualizarButton);
-        */
 
-        // Botón Eliminar
-        JButton eliminarButton = new JButton("Eliminar");
+        // Botón Listar Productos
+        JButton listarProductosButton = new JButton("Listar Productos");
+        listarProductosButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                listarProductos();
+            }
+        });
+        panel.add(listarProductosButton);
+
+        // Botón Listar Producto Individual
+        JButton listarProductoIndividualButton = new JButton("Listar Producto Individual");
+        listarProductoIndividualButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String idProducto = JOptionPane.showInputDialog(MainView.this, "Ingrese el ID del producto a listar:");
+                listarProductoIndividual(idProducto);
+            }
+        });
+        panel.add(listarProductoIndividualButton);
+
+        // Botón Eliminar Producto
+        JButton eliminarButton = new JButton("Eliminar Producto");
         eliminarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -96,30 +106,16 @@ public class MainView extends JFrame {
         });
         panel.add(eliminarButton);
 
-        // Botón Buscar
-        JButton buscarButton = new JButton("Buscar");
-        buscarButton.addActionListener(new ActionListener() {
+        // Botón Buscar Productos por Marca
+        JButton buscarProductosButton = new JButton("Buscar Productos por Marca");
+        buscarProductosButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String marcaProducto = JOptionPane.showInputDialog(MainView.this, "Ingrese la marca del producto a buscar:");
-                // Realiza la búsqueda en el controlador
-                // Actualiza la información de stock en la interfaz con los resultados obtenidos
-                // Utiliza stockInfoArea.append() para agregar los resultados a la información de stock
+                buscarProductosPorMarca(marcaProducto);
             }
         });
-        panel.add(buscarButton);
-
-        // Botón Listar
-        JButton listarButton = new JButton("Listar");
-        listarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Obtén la lista completa de productos del controlador
-                // Actualiza la información de stock en la interfaz con los resultados obtenidos
-                // Utiliza stockInfoArea.append() para agregar los resultados a la información de stock
-            }
-        });
-        panel.add(listarButton);
+        panel.add(buscarProductosButton);
 
         add(panel);
     }
@@ -141,18 +137,32 @@ public class MainView extends JFrame {
         );
     }
 
-    public void mostrarDetalle(String detalle) {
-        JOptionPane.showMessageDialog(this, detalle, "Detalle", JOptionPane.INFORMATION_MESSAGE);
+    private void listarProductos() {
+        StringBuilder productosText = new StringBuilder();
+        for (Producto producto : controller.obtenerProductos()) {
+            productosText.append(producto.toString()).append("\n");
+        }
+        JOptionPane.showMessageDialog(this, productosText.toString(), "Lista de Productos", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                Usuario usuario = new Usuario("1", "admin", "admin123", "John", "Doe", "Smith");
-                MainController controller = new MainController();
-                MainView mainView = new MainView(usuario, controller);
-                mainView.setVisible(true);
-            }
-        });
+    private void listarProductoIndividual(String idProducto) {
+        Producto producto = controller.obtenerProducto(idProducto);
+        if (producto != null) {
+            JOptionPane.showMessageDialog(this, producto.toString(), "Detalle del Producto", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "No se encontró el producto con ID: " + idProducto, "Producto no encontrado", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private void buscarProductosPorMarca(String marcaProducto) {
+        StringBuilder productosText = new StringBuilder();
+        for (Producto producto : controller.buscarProductosPorMarca(marcaProducto)) {
+            productosText.append(producto.toString()).append("\n");
+        }
+        if (productosText.length() > 0) {
+            JOptionPane.showMessageDialog(this, productosText.toString(), "Productos con Marca: " + marcaProducto, JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "No se encontraron productos con la marca: " + marcaProducto, "Productos no encontrados", JOptionPane.WARNING_MESSAGE);
+        }
     }
 }
