@@ -5,7 +5,6 @@ import org.example.models.Producto;
 import org.example.models.Usuario;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,6 +13,7 @@ public class MainView extends JFrame {
     private Usuario usuario;
     private MainController controller;
     private JTextArea stockInfoArea;
+    private JComboBox<String> productoComboBox;
 
     public MainView(Usuario usuario, MainController controller) {
         this.usuario = usuario;
@@ -23,6 +23,7 @@ public class MainView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
+        this.stockInfoArea = new JTextArea();
 
         initComponents();
     }
@@ -41,11 +42,18 @@ public class MainView extends JFrame {
         agregarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AgregarProductoView agregarProductoView = new AgregarProductoView(controller, MainView.this);
+                String tipoProducto = (String) productoComboBox.getSelectedItem();
+                AgregarProductoView agregarProductoView = new AgregarProductoView(controller, MainView.this, tipoProducto);
                 agregarProductoView.setVisible(true);
+
+                productoComboBox.setVisible(true);
             }
         });
         panel.add(agregarButton);
+
+        productoComboBox = new JComboBox<>(new String[]{"Teclado", "Mouse", "Monitor", "Notebook", "PC de escritorio"});
+        productoComboBox.setVisible(false); // Establecer la visibilidad inicial como false
+        panel.add(productoComboBox);
 
         // Botón Actualizar Producto
         JButton actualizarButton = new JButton("Actualizar Producto");
@@ -115,10 +123,25 @@ public class MainView extends JFrame {
                 buscarProductosPorMarca(marcaProducto);
             }
         });
+        // JComboBox para mostrar los nombres de los productos
+        JComboBox<String> productoComboBox = new JComboBox<>(new String[]{"Teclado", "Mouse", "Monitor", "Notebook", "PC de escritorio"});
+        productoComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String productoSeleccionado = (String) productoComboBox.getSelectedItem();
+                if (productoSeleccionado != null) {
+                    agregarProducto(productoSeleccionado);
+                }
+            }
+        });
         panel.add(buscarProductosButton);
-
         add(panel);
     }
+    private void agregarProducto(String tipoProducto) {
+        AgregarProductoView agregarProductoView = new AgregarProductoView(controller, MainView.this, tipoProducto);
+        agregarProductoView.setVisible(true);
+    }
+
 
     public void actualizarStockInfo() {
         stockInfoArea.setText("");

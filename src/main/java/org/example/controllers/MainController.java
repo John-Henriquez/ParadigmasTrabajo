@@ -20,9 +20,12 @@ public class MainController {
     }
 
     public void agregarProducto(Producto producto) {
+        // Generar el ID automáticamente antes de agregar el producto
+        producto.setId("P" + (productos.size() + 1));
         productos.add(producto);
         actualizarStock(producto.getModelo(), 1);
     }
+
 
     public void eliminarProducto(Producto producto) {
         productos.remove(producto);
@@ -70,5 +73,5 @@ public class MainController {
         }
         return productosMarca;
     }
-    
+
 }

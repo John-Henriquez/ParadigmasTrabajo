@@ -13,6 +13,10 @@ public abstract class Producto {
         this.cantidadExistente = 0;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }
