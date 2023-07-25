@@ -21,11 +21,9 @@ public class AgregarProductoView extends JFrame {
     private JTextField tamañoPantallaField;
     private String tipoProducto;
 
-
     public AgregarProductoView(MainController controller, MainView mainView, String tipoProducto) {
         this.controller = controller;
         this.mainView = mainView;
-        setTitle("Agregar Producto");
         this.tipoProducto = tipoProducto;
         setTitle("Agregar " + tipoProducto);
         setSize(300, 300);
@@ -34,54 +32,65 @@ public class AgregarProductoView extends JFrame {
         setResizable(false);
         initComponents();
     }
+
     private void initComponents() {
         panel = new JPanel();
         panel.setLayout(null);
 
-        // Agregamos el campo para el idioma del teclado
-        JLabel idiomaLabel = new JLabel("Idioma:");
-        idiomaLabel.setBounds(20, 150, 80, 25);
-        panel.add(idiomaLabel);
+        // Agregamos el campo para el idioma del teclado (si es un teclado)
+        if (tipoProducto.equals("Teclado")) {
+            JLabel idiomaLabel = new JLabel("Idioma:");
+            idiomaLabel.setBounds(20, 150, 80, 25);
+            panel.add(idiomaLabel);
 
-        idiomaField = new JTextField();
-        idiomaField.setBounds(100, 150, 160, 25);
-        panel.add(idiomaField);
+            idiomaField = new JTextField();
+            idiomaField.setBounds(100, 150, 160, 25);
+            panel.add(idiomaField);
+        }
 
-        // Agregamos el campo para el tamaño del monitor
-        JLabel tamañoMonitorLabel = new JLabel("Tamaño Monitor:");
-        tamañoMonitorLabel.setBounds(20, 190, 120, 25);
-        panel.add(tamañoMonitorLabel);
+        // Agregamos el campo para el tamaño del monitor (si es un monitor)
+        if (tipoProducto.equals("Monitor")) {
+            JLabel tamañoMonitorLabel = new JLabel("Tamaño Monitor:");
+            tamañoMonitorLabel.setBounds(20, 150, 120, 25);
+            panel.add(tamañoMonitorLabel);
 
-        tamañoMonitorField = new JTextField();
-        tamañoMonitorField.setBounds(140, 190, 120, 25);
-        panel.add(tamañoMonitorField);
+            tamañoMonitorField = new JTextField();
+            tamañoMonitorField.setBounds(140, 150, 120, 25);
+            panel.add(tamañoMonitorField);
+        }
 
         // Agregamos el campo para la cantidad de RAM en notebook y PC de escritorio
-        JLabel cantidadRAMLabel = new JLabel("Cantidad de RAM:");
-        cantidadRAMLabel.setBounds(20, 150, 120, 25);
-        panel.add(cantidadRAMLabel);
+        if (tipoProducto.equals("Notebook") || tipoProducto.equals("PC de escritorio")) {
+            JLabel cantidadRAMLabel = new JLabel("Cantidad de RAM:");
+            cantidadRAMLabel.setBounds(20, 150, 120, 25);
+            panel.add(cantidadRAMLabel);
 
-        cantidadRAMField = new JTextField();
-        cantidadRAMField.setBounds(140, 150, 120, 25);
-        panel.add(cantidadRAMField);
+            cantidadRAMField = new JTextField();
+            cantidadRAMField.setBounds(140, 150, 120, 25);
+            panel.add(cantidadRAMField);
+        }
 
         // Agregamos el campo para el procesador en notebook y PC de escritorio
-        JLabel procesadorLabel = new JLabel("Procesador:");
-        procesadorLabel.setBounds(20, 190, 80, 25);
-        panel.add(procesadorLabel);
+        if (tipoProducto.equals("Notebook") || tipoProducto.equals("PC de escritorio")) {
+            JLabel procesadorLabel = new JLabel("Procesador:");
+            procesadorLabel.setBounds(20, 190, 80, 25);
+            panel.add(procesadorLabel);
 
-        procesadorField = new JTextField();
-        procesadorField.setBounds(100, 190, 160, 25);
-        panel.add(procesadorField);
+            procesadorField = new JTextField();
+            procesadorField.setBounds(100, 190, 160, 25);
+            panel.add(procesadorField);
+        }
 
         // Agregamos el campo para el tamaño de pantalla en notebook
-        JLabel tamañoPantallaLabel = new JLabel("Tamaño Pantalla:");
-        tamañoPantallaLabel.setBounds(20, 230, 120, 25);
-        panel.add(tamañoPantallaLabel);
+        if (tipoProducto.equals("Notebook")) {
+            JLabel tamañoPantallaLabel = new JLabel("Tamaño Pantalla:");
+            tamañoPantallaLabel.setBounds(20, 230, 120, 25);
+            panel.add(tamañoPantallaLabel);
 
-        tamañoPantallaField = new JTextField();
-        tamañoPantallaField.setBounds(140, 230, 120, 25);
-        panel.add(tamañoPantallaField);
+            tamañoPantallaField = new JTextField();
+            tamañoPantallaField.setBounds(140, 230, 120, 25);
+            panel.add(tamañoPantallaField);
+        }
 
         JLabel idLabel = new JLabel("ID:");
         idLabel.setBounds(20, 30, 80, 25);
@@ -108,7 +117,7 @@ public class AgregarProductoView extends JFrame {
         panel.add(modeloField);
 
         JButton agregarButton = new JButton("Agregar");
-        agregarButton.setBounds(100, 150, 100, 25);
+        agregarButton.setBounds(100, 260, 100, 25);
         panel.add(agregarButton);
 
         agregarButton.addActionListener(new ActionListener() {
@@ -117,7 +126,6 @@ public class AgregarProductoView extends JFrame {
                 agregarProducto();
             }
         });
-
         add(panel);
     }
 
@@ -126,9 +134,9 @@ public class AgregarProductoView extends JFrame {
         String marca = marcaField.getText();
         String modelo = modeloField.getText();
 
-        if (!tipoProducto.isEmpty() && !marca.isEmpty() && !modelo.isEmpty()) {
-            // Crear el nuevo producto y agregarlo al controlador según el tipo seleccionado
-            Producto producto;
+        if (!id.isEmpty() && !marca.isEmpty() && !modelo.isEmpty()) {
+            Producto producto = null;
+
             switch (tipoProducto) {
                 case "Teclado":
                     String idioma = idiomaField.getText();
@@ -138,47 +146,47 @@ public class AgregarProductoView extends JFrame {
                     producto = new Mouse(id, marca, modelo);
                     break;
                 case "Monitor":
-                    int tamañoMonitor = Integer.parseInt(tamañoMonitorField.getText());;
-                    producto = new Monitor(id, marca, modelo, tamañoMonitor);
+                    try {
+                        int tamañoMonitor = Integer.parseInt(tamañoMonitorField.getText());
+                        producto = new Monitor(id, marca, modelo, tamañoMonitor);
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(this, "El tamaño del monitor debe ser un valor numérico válido.");
+                        return;
+                    }
                     break;
                 case "Notebook":
-                    int cantidadRAM = Integer.parseInt(cantidadRAMField.getText());
-                    String procesador = procesadorField.getText();
-                    int tamañoPantalla = Integer.parseInt(tamañoPantallaField.getText());
-                    producto = new Notebook(id, marca, modelo, cantidadRAM, procesador, tamañoPantalla);
+                    try {
+                        int cantidadRAM = Integer.parseInt(cantidadRAMField.getText());
+                        String procesador = procesadorField.getText();
+                        int tamañoPantalla = Integer.parseInt(tamañoPantallaField.getText());
+                        producto = new Notebook(id, marca, modelo, cantidadRAM, procesador, tamañoPantalla);
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(this, "La cantidad de RAM y el tamaño de pantalla deben ser valores numéricos válidos.");
+                        return;
+                    }
                     break;
                 case "PC de escritorio":
-                    int cantidadRAMPC = Integer.parseInt(cantidadRAMField.getText());
-                    String procesadorPC = procesadorField.getText();
-                    producto = new PCDeEscritorio(id, marca, modelo, cantidadRAMPC, procesadorPC, null, null, null);
-                    break;
-                default:
-                    producto = null;
+                    try {
+                        int cantidadRAMPC = Integer.parseInt(cantidadRAMField.getText());
+                        String procesadorPC = procesadorField.getText();
+                        producto = new PCDeEscritorio(id, marca, modelo, cantidadRAMPC, procesadorPC, null, null, null);
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(this, "La cantidad de RAM debe ser un valor numérico válido.");
+                        return;
+                    }
                     break;
             }
 
             if (producto != null) {
                 controller.agregarProducto(producto);
-
-                // Actualizar la información del stock en la vista principal
                 mainView.actualizarStockInfo();
-
-                // Cerrar la ventana de agregar producto
                 dispose();
-
                 JOptionPane.showMessageDialog(mainView, "Producto agregado correctamente.");
             } else {
                 JOptionPane.showMessageDialog(this, "Tipo de producto inválido.");
             }
         } else {
             JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.");
-        }
-    }
-
-    // Puedes modificarlo según tus necesidades, o usar las clases existentes Teclado, Mouse, Monitor, Notebook, PCDeEscritorio, etc.
-    private static class ProductoBase extends Producto {
-        public ProductoBase(String id, String marca, String modelo) {
-            super(id, marca, modelo);
         }
     }
 }

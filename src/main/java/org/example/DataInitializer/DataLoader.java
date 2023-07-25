@@ -62,19 +62,19 @@ public class DataLoader {
     public static void initController(MainController controller) {
         // Agregar los productos precargados al controlador
         for (Teclado teclado : listaTeclados) {
-            controller.agregarProducto(teclado);
+            controller.agregarTeclado(teclado);
         }
         for (Mouse mouse : listaMouses) {
-            controller.agregarProducto(mouse);
+            controller.agregarMouse(mouse);
         }
         for (Monitor monitor : listaMonitores) {
-            controller.agregarProducto(monitor);
+            controller.agregarMonitor(monitor);
         }
         for (Notebook notebook : listaNotebooks) {
-            controller.agregarProducto(notebook);
+            controller.agregarNotebook(notebook);
         }
         for (PCDeEscritorio pc : listaPCs) {
-            controller.agregarProducto(pc);
+            controller.agregarPCDeEscritorio(pc);
         }
     }
     public static void listarProductos() {

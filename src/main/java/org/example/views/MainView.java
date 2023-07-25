@@ -1,12 +1,13 @@
 package org.example.views;
 
 import org.example.controllers.MainController;
-import org.example.models.Producto;
-import org.example.models.Usuario;
+import org.example.models.*;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class MainView extends JFrame {
 
@@ -19,43 +20,81 @@ public class MainView extends JFrame {
         this.usuario = usuario;
         this.controller = controller;
         setTitle("Main View");
-        setSize(500, 400);
+        setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
         this.stockInfoArea = new JTextArea();
 
         initComponents();
+        actualizarStockInfo();
     }
 
     private void initComponents() {
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setLayout(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JLabel usernameLabel = new JLabel("Usuario: " + usuario.getNombreCompleto());
-        panel.add(usernameLabel);
+        panel.add(usernameLabel, BorderLayout.NORTH);
 
+        JPanel buttonsPanel = new JPanel(new GridLayout(0, 1, 10, 5));
 
-        // Botón Agregar Producto
         JButton agregarButton = new JButton("Agregar Producto");
         agregarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String tipoProducto = (String) productoComboBox.getSelectedItem();
-                AgregarProductoView agregarProductoView = new AgregarProductoView(controller, MainView.this, tipoProducto);
-                agregarProductoView.setVisible(true);
-
                 productoComboBox.setVisible(true);
             }
         });
-        panel.add(agregarButton);
+        buttonsPanel.add(agregarButton);
 
         productoComboBox = new JComboBox<>(new String[]{"Teclado", "Mouse", "Monitor", "Notebook", "PC de escritorio"});
-        productoComboBox.setVisible(false); // Establecer la visibilidad inicial como false
-        panel.add(productoComboBox);
+        productoComboBox.setVisible(false);
+        productoComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String tipoProducto = (String) productoComboBox.getSelectedItem();
+                String nombreProducto = JOptionPane.showInputDialog(MainView.this, "Ingrese el nombre del producto:");
 
-        // Botón Actualizar Producto
+                if (nombreProducto != null && !nombreProducto.isEmpty()) {
+                    if (tipoProducto.equals("Teclado")) {
+                        String id = "teclado-id";
+                        String idioma = JOptionPane.showInputDialog(MainView.this, "Ingrese el idioma del teclado:");
+                        Teclado teclado = new Teclado(id, nombreProducto, tipoProducto, idioma);
+                        controller.agregarTeclado(teclado);
+                    } else if (tipoProducto.equals("Mouse")) {
+                        String id = "mouse-id";
+                        Mouse mouse = new Mouse(id, nombreProducto, tipoProducto);
+                        controller.agregarMouse(mouse);
+                    } else if (tipoProducto.equals("Monitor")) {
+                        String id = "monitor-id";
+                        int tamañoMonitor = Integer.parseInt(JOptionPane.showInputDialog(MainView.this, "Ingrese el tamaño del monitor:"));
+                        Monitor monitor = new Monitor(id, nombreProducto, tipoProducto, tamañoMonitor);
+                        controller.agregarMonitor(monitor);
+                    } else if (tipoProducto.equals("Notebook")) {
+                        String id = "notebook-id";
+                        int cantidadRAM = Integer.parseInt(JOptionPane.showInputDialog(MainView.this, "Ingrese la cantidad de RAM del notebook:"));
+                        String procesador = JOptionPane.showInputDialog(MainView.this, "Ingrese el procesador del notebook:");
+                        int tamañoPantalla = Integer.parseInt(JOptionPane.showInputDialog(MainView.this, "Ingrese el tamaño de pantalla del notebook:"));
+                        Notebook notebook = new Notebook(id, nombreProducto, tipoProducto, cantidadRAM, procesador, tamañoPantalla);
+                        controller.agregarNotebook(notebook);
+                    } else if (tipoProducto.equals("PC de escritorio")) {
+                        String id = "pc-id";
+                        int cantidadRAMPC = Integer.parseInt(JOptionPane.showInputDialog(MainView.this, "Ingrese la cantidad de RAM de la PC de escritorio:"));
+                        String procesadorPC = JOptionPane.showInputDialog(MainView.this, "Ingrese el procesador de la PC de escritorio:");
+                        PCDeEscritorio pc = new PCDeEscritorio(id, nombreProducto, tipoProducto, cantidadRAMPC, procesadorPC, null, null, null);
+                        controller.agregarPCDeEscritorio(pc);
+                    }
+                    productoComboBox.setVisible(false);
+                    actualizarStockInfo();
+                } else {
+                    JOptionPane.showMessageDialog(MainView.this, "Por favor, ingrese el nombre del producto.");
+                }
+            }
+        });
+        buttonsPanel.add(productoComboBox);
+
         JButton actualizarButton = new JButton("Actualizar Producto");
         actualizarButton.addActionListener(new ActionListener() {
             @Override
@@ -70,9 +109,8 @@ public class MainView extends JFrame {
                 }
             }
         });
-        panel.add(actualizarButton);
+        buttonsPanel.add(actualizarButton);
 
-        // Botón Listar Productos
         JButton listarProductosButton = new JButton("Listar Productos");
         listarProductosButton.addActionListener(new ActionListener() {
             @Override
@@ -80,20 +118,8 @@ public class MainView extends JFrame {
                 listarProductos();
             }
         });
-        panel.add(listarProductosButton);
+        buttonsPanel.add(listarProductosButton);
 
-        // Botón Listar Producto Individual
-        JButton listarProductoIndividualButton = new JButton("Listar Producto Individual");
-        listarProductoIndividualButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String idProducto = JOptionPane.showInputDialog(MainView.this, "Ingrese el ID del producto a listar:");
-                listarProductoIndividual(idProducto);
-            }
-        });
-        panel.add(listarProductoIndividualButton);
-
-        // Botón Eliminar Producto
         JButton eliminarButton = new JButton("Eliminar Producto");
         eliminarButton.addActionListener(new ActionListener() {
             @Override
@@ -112,9 +138,8 @@ public class MainView extends JFrame {
                 }
             }
         });
-        panel.add(eliminarButton);
+        buttonsPanel.add(eliminarButton);
 
-        // Botón Buscar Productos por Marca
         JButton buscarProductosButton = new JButton("Buscar Productos por Marca");
         buscarProductosButton.addActionListener(new ActionListener() {
             @Override
@@ -123,69 +148,44 @@ public class MainView extends JFrame {
                 buscarProductosPorMarca(marcaProducto);
             }
         });
-        // JComboBox para mostrar los nombres de los productos
-        JComboBox<String> productoComboBox = new JComboBox<>(new String[]{"Teclado", "Mouse", "Monitor", "Notebook", "PC de escritorio"});
-        productoComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String productoSeleccionado = (String) productoComboBox.getSelectedItem();
-                if (productoSeleccionado != null) {
-                    agregarProducto(productoSeleccionado);
-                }
-            }
-        });
-        panel.add(buscarProductosButton);
+        buttonsPanel.add(buscarProductosButton);
+        panel.add(buttonsPanel, BorderLayout.CENTER);
         add(panel);
-    }
-    private void agregarProducto(String tipoProducto) {
-        AgregarProductoView agregarProductoView = new AgregarProductoView(controller, MainView.this, tipoProducto);
-        agregarProductoView.setVisible(true);
-    }
-
-
-    public void actualizarStockInfo() {
-        stockInfoArea.setText("");
-        int tecladoStock = controller.getCantidadExistente("Teclado");
-        int mouseStock = controller.getCantidadExistente("Mouse");
-        int monitorStock = controller.getCantidadExistente("Monitor");
-        int notebookStock = controller.getCantidadExistente("Notebook");
-        int pcEscritorioStock = controller.getCantidadExistente("PC de escritorio");
-
-        stockInfoArea.append(
-                "Teclado: " + tecladoStock + "\n" +
-                        "Mouse: " + mouseStock + "\n" +
-                        "Monitor: " + monitorStock + "\n" +
-                        "Notebook: " + notebookStock + "\n" +
-                        "PC de escritorio: " + pcEscritorioStock + "\n"
-        );
     }
 
     private void listarProductos() {
         StringBuilder productosText = new StringBuilder();
-        for (Producto producto : controller.obtenerProductos()) {
+        List<Producto> productos = controller.obtenerProductos();
+        for (Producto producto : productos) {
             productosText.append(producto.toString()).append("\n");
         }
         JOptionPane.showMessageDialog(this, productosText.toString(), "Lista de Productos", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void listarProductoIndividual(String idProducto) {
-        Producto producto = controller.obtenerProducto(idProducto);
-        if (producto != null) {
-            JOptionPane.showMessageDialog(this, producto.toString(), "Detalle del Producto", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this, "No se encontró el producto con ID: " + idProducto, "Producto no encontrado", JOptionPane.WARNING_MESSAGE);
-        }
-    }
-
     private void buscarProductosPorMarca(String marcaProducto) {
         StringBuilder productosText = new StringBuilder();
-        for (Producto producto : controller.buscarProductosPorMarca(marcaProducto)) {
+        List<Producto> productos = controller.buscarProductosPorMarca(marcaProducto);
+        for (Producto producto : productos) {
             productosText.append(producto.toString()).append("\n");
         }
         if (productosText.length() > 0) {
             JOptionPane.showMessageDialog(this, productosText.toString(), "Productos con Marca: " + marcaProducto, JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(this, "No se encontraron productos con la marca: " + marcaProducto, "Productos no encontrados", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    public void actualizarStockInfo() {
+        List<Producto> productos = controller.obtenerProductos();
+        if (!productos.isEmpty()) {
+            StringBuilder stockInfo = new StringBuilder();
+            for (Producto producto : productos) {
+                int cantidad = controller.getCantidadExistente(producto.getModelo());
+                stockInfo.append(producto.getMarca()).append(" - ").append(producto.getModelo()).append(": ").append(cantidad).append("\n");
+            }
+            stockInfoArea.setText(stockInfo.toString());
+        } else {
+            stockInfoArea.setText("No hay productos registrados.");
         }
     }
 }
